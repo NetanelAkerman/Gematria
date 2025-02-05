@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guematria de Génesis 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #f4f4f4;
+            padding: 15px 0;
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid #ccc;
+            z-index: 1000;
+        }
+
+        #sum {
+            margin: 0;
+        }
+
+        #text {
+            margin-top: 70px;
+            padding: 10px;
+        }
+
+        .verse {
+            margin: 10px 0;
+            font-size: 24px;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .verse::after {
+            content: "";
+            display: block;
+            width: 80%;
+            height: 1px;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+            margin: 5px auto;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .word {
+            cursor: pointer;
+            padding: 5px;
+            margin: 3px;
+            display: inline-block;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .word:hover {
+            background: lightblue;
+        }
+
+        .selected {
+            background: yellow;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <div id="sum">Suma de Guematria: 0</div>
+    </div>
+
+    <div id="text"></div>
+
+    <script>
+        // 📌 JSON de palabras y guematria directamente en el HTML
+        const data = {
+            "words": [
+                [
+                    ["בראשית", "ברא", "אלהים", "את", "השמים", "ואת", "הארץ"], 
+                    ["והארץ", "היתה", "תהו", "ובהו", "וחשך", "על", "פני", "תהום", "ורוח", "אלהים", "מרחפת", "על", "פני", "המים"], 
+                    ["ויאמר", "אלהים", "יהי", "אור", "ויהי", "אור"]
+                ]
+            ],
+            "gematria": [
+                [
+                    [913, 203, 86, 401, 395, 407, 296], 
+                    [302, 420, 411, 19, 328, 100, 180, 446, 214, 86, 728, 100, 180, 90], 
+                    [317, 86, 25, 207, 37, 207]
+                ]
+            ]
+        };
+
+        let selectedWords = []; // Guarda los valores de guematria seleccionados
+
+        function displayChapter() {
+            let container = document.getElementById("text");
+            container.innerHTML = "";
+
+            data.words[0].forEach((verse, verseIndex) => {
+                let verseDiv = document.createElement("div");
+                verseDiv.classList.add("verse");
+
+                verse.forEach((word, wordIndex) => {
+                    let span = document.createElement("span");
+                    span.classList.add("word");
+                    span.textContent = word;
+
+                    // Agregar evento de clic
+                    span.addEventListener("click", function () {
+                        toggleSelection(span, data.gematria[0][verseIndex][wordIndex]);
+                    });
+
+                    verseDiv.appendChild(span);
+                    verseDiv.appendChild(document.createTextNode(" ")); // Espacio entre palabras
+                });
+
+                container.appendChild(verseDiv);
+            });
+        }
+
+        function toggleSelection(element, gematriaValue) {
+            if (element.classList.contains("selected")) {
+                element.classList.remove("selected");
+                selectedWords = selectedWords.filter(value => value !== gematriaValue);
+            } else {
+                element.classList.add("selected");
+                selectedWords.push(gematriaValue);
+            }
+
+            updateSum();
+        }
+
+        function updateSum() {
+            let sum = selectedWords.reduce((acc, val) => acc + val, 0);
+            document.getElementById("sum").textContent = "Suma de Guematria: " + sum;
+        }
+
+        // Mostrar el capítulo al cargar la página
+        displayChapter();
+    </script>
+
+</body>
+</html>
